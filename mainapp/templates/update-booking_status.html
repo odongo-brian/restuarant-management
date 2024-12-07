@@ -1,0 +1,7 @@
+<!-- booking/templates/booking/update_booking_status.html -->
+<h1>Update Booking Status</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Update Status</button>
+</form>

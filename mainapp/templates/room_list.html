@@ -1,0 +1,15 @@
+<!-- booking/templates/booking/room_list.html -->
+{% extends 'base.html' %}
+{% block a_rooms %}
+    <h1>Available Rooms</h1>
+    <ul>
+        {% for room in rooms %}
+            <li>
+                <h2>{{ room.room_number }}</h2>
+                <p>{{ room.type }}</p>
+                <p>Price: Ksh. {{ room.price_per_night }}</p>
+                <a href="{% url 'book_room' room.id %}">Book Now</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

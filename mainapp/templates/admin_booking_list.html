@@ -1,0 +1,12 @@
+<!-- booking/templates/booking/admin_booking_list.html -->
+{#admin viewing all bookings#}
+
+<h1>All Bookings</h1>
+<ul>
+    {% for booking in bookings %}
+        <li>
+            <h2>Booking for {{ booking.room.name }} by {{ booking.user.username }} ({{ booking.status }})</h2>
+            <a href="{% url 'booking:update_booking_status' booking.id %}">Update Status</a>
+        </li>
+    {% endfor %}
+</ul>
