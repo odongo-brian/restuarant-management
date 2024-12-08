@@ -1,32 +1,39 @@
-<!-- registration/register.html -->
 {% extends 'base.html' %}
 {% load widget_tweaks %}
-
 
 {% block content %}
     <div class="container mt-5">
         <h1 class="text-center">Register</h1>
         <div class="row justify-content-center">
             <div class="col-md-6">
-                <form action="" method="post">
+                <form method="POST">
                     {% csrf_token %}
+                    
                     <div class="mb-3">
-                        <label for="Username" class="form-label">Username</label>
+                        <label for="username" class="form-label">Username</label>
                         {{ form.username|add_class:"form-control" }}
                     </div>
+                    
                     <div class="mb-3">
-                        <label for="fname" class="form-label">First name</label>
-                        {{ form.fname|add_class:"form-control" }}
+                        <label for="email" class="form-label">Email</label>
+                        {{ form.email|add_class:"form-control" }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password1" class="form-label">Password</label>
+                        {{ form.password1|add_class:"form-control" }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password2" class="form-label">Confirm Password</label>
+                        {{ form.password2|add_class:"form-control" }}
+                    </div>
+
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary w-100 mb-5">Register</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-    <h1>Register</h1>
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Register</button>
-    </form>
 {% endblock %}
-

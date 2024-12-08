@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Room, Booking
 from .forms import BookingForm, BookingStatusForm
 from django.contrib.auth.forms import UserCreationForm
+from .forms import CustomUserCreationForm
 from django.contrib import messages
 
 
@@ -33,19 +34,30 @@ def room_list(request):
 @login_required
 def book_room(request, room_id):
     room = get_object_or_404(Room, id=room_id)
-    if request.method == 'POST':
-        form = BookingForm(request.POST)
-        if form.is_valid():
-            booking = form.save(commit=False)
-            booking.user = request.user
-            booking.save()
-            room.available = False  # Mark room as unavailable
-            room.save()
-            return redirect('booking_success')
-    else:
-        form = BookingForm(initial={'room': room})
-    return render(request, 'book_room.html', {'form': form, 'room': room})
 
+    if request.method == 'POST':
+        # Get the form data
+        start_date = request.POST['start_date']
+        end_date = request.POST['end_date']
+
+        # Ensure that start date is before end date
+        if start_date >= end_date:
+            # Add an error message if the dates are invalid
+            messages.error(request, 'Start date must be before end date.')
+            return redirect('book_room', room_id=room.id)
+
+        # Create a booking instance
+        booking = Booking(user=request.user, room=room, start_date=start_date, end_date=end_date)
+        booking.save()
+
+        # Mark the room as unavailable
+        room.is_available = False
+        room.save()
+
+        # Redirect to the booking success page or another page
+        return redirect('booking_success')  # Assuming you have a page for booking success
+
+    return render(request, 'booking/book_room.html', {'room': room})
 # View for a successful booking
 def booking_success(request):
     return render(request, 'booking_success.html')
@@ -84,6 +96,18 @@ def user_bookings(request):
     # Get the bookings for the currently logged-in user
     bookings = Booking.objects.filter(user=request.user)
     return render(request, 'user_booking.html', {'bookings': bookings})
+
+
+def register(request):
+    if request.method == "POST":
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            # Redirect to a success page
+    else:
+        form = CustomUserCreationForm()
+
+    return render(request, 'register.html', {'form': form})
 
 
 def base(request):
